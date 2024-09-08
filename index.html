@@ -61,26 +61,21 @@
       };
     }
 
-    // GeoJSON Data for Wyoming Counties
-    fetch('tl_2023_us_county.json')
-  .then(response => response.json())
-  .then(data => {
-    L.geoJson(data, {
-      style: style,
-      onEachFeature: function (feature, layer) {
-        layer.bindPopup(feature.properties.name + '<br>Population: ' + feature.properties.population);
-      }
-    }).addTo(map);
-  });
-
-
-    // Add Wyoming counties to the map
-    L.geoJson(geojsonData, {
-      style: style,
-      onEachFeature: function (feature, layer) {
-        layer.bindPopup(feature.properties.name + '<br>Population: ' + feature.properties.population);
-      }
-    }).addTo(map);
+    // Fetch Wyoming counties GeoJSON data
+    fetch('data/tl_2023_us_county.json')  // Make sure the path to your GeoJSON is correct
+      .then(response => response.json())
+      .then(data => {
+        L.geoJson(data, {
+          style: style,
+          onEachFeature: function (feature, layer) {
+            // Replace 'population' with an actual property if it exists
+            const population = feature.properties.population || 'Unknown';
+            const countyName = feature.properties.NAME; // Example field for county name
+            layer.bindPopup(countyName + '<br>Population: ' + population);
+          }
+        }).addTo(map);
+      })
+      .catch(error => console.error('Error loading GeoJSON:', error));
   </script>
 </body>
 </html>
